@@ -1,6 +1,6 @@
 package ffnn
 
-func (net *Network) Calculate(input []float64) []float64 {
+func (net *Network) Work(input []float64) []float64 {
 	for _, l := range net.Layers {
 		input = l.calculate(input)
 	}
@@ -11,7 +11,7 @@ func (l *Layer) calculate(input []float64) []float64 {
 	nLength := len(l.neurons)
 	output := make([]float64, nLength)
 	for i, n := range l.neurons {
-		output[i] =  n.calculate(input)
+		output[i] = n.calculate(input)
 	}
 	return output
 }

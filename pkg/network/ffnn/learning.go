@@ -1,8 +1,8 @@
 package ffnn
 
-func (net *Network) Learn(input []float64, output []float64) {
+func (net *Network) Train(input []float64, output []float64) {
 	errs := make([]float64, len(net.Layers[len(net.Layers)-1].neurons))
-	realOutput := net.Calculate(input)
+	realOutput := net.Work(input)
 	for i, o := range realOutput {
 		errs[i] = output[i] - o
 	}

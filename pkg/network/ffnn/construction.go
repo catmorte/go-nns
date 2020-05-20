@@ -65,3 +65,9 @@ func (l *Network) ChangeActivation(activation activation.Activation) {
 		layer.ChangeActivation(activation)
 	}
 }
+
+func (l *Network) ChangeLearnSpeed(learnSpeed float64) {
+	for _, layer := range l.Layers {
+		layer.ChangeLearnSpeed(learnSpeed)
+	}
+}

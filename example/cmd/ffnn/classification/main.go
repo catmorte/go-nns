@@ -16,16 +16,16 @@ func main() {
 	net.AddLayer(4, weightGen, activationCalc, 0.01)
 
 	for i := 0; i < 200000; i++ {
-		net.Learn([]float64{1, 1}, []float64{1, 0, 0, 0})
-		net.Learn([]float64{1, 0}, []float64{0, 1, 0, 0})
-		net.Learn([]float64{0, 1}, []float64{0, 0, 1, 0})
-		net.Learn([]float64{0, 0}, []float64{0, 0, 0, 1})
+		net.Train([]float64{1, 1}, []float64{1, 0, 0, 0})
+		net.Train([]float64{1, 0}, []float64{0, 1, 0, 0})
+		net.Train([]float64{0, 1}, []float64{0, 0, 1, 0})
+		net.Train([]float64{0, 0}, []float64{0, 0, 0, 1})
 	}
 
-	fmt.Println(getMaxIndexAndVal(net.Calculate([]float64{1, 1})))
-	fmt.Println(getMaxIndexAndVal(net.Calculate([]float64{1, 0})))
-	fmt.Println(getMaxIndexAndVal(net.Calculate([]float64{0, 1})))
-	fmt.Println(getMaxIndexAndVal(net.Calculate([]float64{0, 0})))
+	fmt.Println(getMaxIndexAndVal(net.Work([]float64{1, 1})))
+	fmt.Println(getMaxIndexAndVal(net.Work([]float64{1, 0})))
+	fmt.Println(getMaxIndexAndVal(net.Work([]float64{0, 1})))
+	fmt.Println(getMaxIndexAndVal(net.Work([]float64{0, 0})))
 }
 
 func getMaxIndexAndVal(values []float64) (int, float64){
