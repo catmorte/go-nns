@@ -6,30 +6,29 @@ import (
 	"io"
 )
 
-func (net *Network) AddLayer(layoutSize int, weightInitFunc func() float64, activation activation.Activation, learnSpeed float64) {
+func (net *Network) AddLayer(layoutamount int, weightInitFunc func() float64, activation activation.Activation, learnSpeed float64) {
 	inputSize := net.inputSize
-	lLength := len(net.Layers)
-	if lLength > 0 {
-		inputSize = len(net.Layers[lLength-1].neurons)
+	layersAmount := len(net.Layers)
+	if layersAmount > 0 {
+		inputSize = len(net.Layers[layersAmount-1].neurons)
 	}
-	net.Layers = append(net.Layers, newLayer(inputSize, layoutSize, weightInitFunc, activation, learnSpeed))
+	net.Layers = append(net.Layers, newLayer(inputSize, layoutamount, weightInitFunc, activation, learnSpeed))
 }
 
-func newLayer(inputSize int, layoutSize int, weightInitFunc func() float64, activation activation.Activation, learnSpeed float64) *Layer {
+func newLayer(inputsAmount int, layoutSize int, weightInitFunc func() float64, activation activation.Activation, learnSpeed float64) *Layer {
 	neurons := make([]*Neuron, layoutSize)
 	for i := 0; i < layoutSize; i++ {
-		neurons[i] = newNeuron(inputSize, weightInitFunc, activation)
+		neurons[i] = newNeuron(inputsAmount, weightInitFunc, activation)
 	}
-	l := &Layer{neurons: neurons, learnSpeed: learnSpeed}
-	return l
+	return &Layer{neurons: neurons, learnSpeed: learnSpeed}
 }
 
-func newNeuron(inputSize int, weightInitFunc func() float64, activation activation.Activation) *Neuron {
-	inputWeights := make([]float64, inputSize)
+func newNeuron(inputAmount int, weightsGen func() float64, activation activation.Activation) *Neuron {
+	inputWeights := make([]float64, inputAmount)
 	for i := 0; i < len(inputWeights); i++ {
-		inputWeights[i] = weightInitFunc()
+		inputWeights[i] = weightsGen()
 	}
-	return &Neuron{inputWeights: inputWeights, shiftNeuronWeight: weightInitFunc(), activation: activation}
+	return &Neuron{weights: inputWeights, weightShift: weightsGen(), activation: activation}
 }
 
 func (net *Network) Export(writer io.Writer) error {

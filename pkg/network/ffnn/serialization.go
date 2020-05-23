@@ -22,7 +22,7 @@ func (net *Network) MarshalJSON() ([]byte, error) {
 	for li, layer := range net.Layers {
 		jsonNet.Layers[li] = JSONLayer{Neurons: make([]JSONNeuron, len(layer.neurons))}
 		for ni, neuron := range layer.neurons {
-			jsonNet.Layers[li].Neurons[ni] = JSONNeuron{ShiftWeight: neuron.shiftNeuronWeight, Weights: neuron.inputWeights}
+			jsonNet.Layers[li].Neurons[ni] = JSONNeuron{ShiftWeight: neuron.weightShift, Weights: neuron.weights}
 		}
 	}
 	return json.Marshal(jsonNet)
@@ -38,7 +38,7 @@ func (net *Network) UnmarshalJSON(b []byte) error {
 	for li, layer := range jsonNetwork.Layers {
 		net.Layers[li] = &Layer{neurons: make([]*Neuron, len(layer.Neurons))}
 		for ni, neuron := range layer.Neurons {
-			net.Layers[li].neurons[ni] = &Neuron{inputWeights: neuron.Weights, shiftNeuronWeight: neuron.ShiftWeight}
+			net.Layers[li].neurons[ni] = &Neuron{weights: neuron.Weights, weightShift: neuron.ShiftWeight}
 		}
 	}
 	return nil

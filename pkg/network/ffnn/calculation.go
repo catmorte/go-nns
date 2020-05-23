@@ -8,8 +8,8 @@ func (net *Network) Work(input []float64) []float64 {
 }
 
 func (l *Layer) calculate(input []float64) []float64 {
-	nLength := len(l.neurons)
-	output := make([]float64, nLength)
+	neuronsAmounts := len(l.neurons)
+	output := make([]float64, neuronsAmounts)
 	for i, n := range l.neurons {
 		output[i] = n.calculate(input)
 	}
@@ -17,11 +17,11 @@ func (l *Layer) calculate(input []float64) []float64 {
 }
 
 func (n *Neuron) calculate(input []float64) float64 {
-	sum := n.shiftNeuronWeight
-	for i, weight := range n.inputWeights {
+	sum := n.weightShift
+	for i, weight := range n.weights {
 		sum += weight * input[i]
 	}
-	n.currentStepSum = sum
-	n.currentStepActivationResult = n.activation.Actual(sum)
-	return n.currentStepActivationResult
+	n.sum = sum
+	n.activationResult = n.activation.Actual(sum)
+	return n.activationResult
 }

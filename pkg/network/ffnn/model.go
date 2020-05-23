@@ -18,11 +18,11 @@ type (
 	Neuron struct {
 		activation activation.Activation
 
-		inputWeights      []float64 // length depends on Network input length(if it's first Layer) or from size of previous Layer
-		shiftNeuronWeight float64
+		weights     []float64 // length depends on Network input length(if it's first Layer) or from size of previous Layer
+		weightShift float64
 
-		currentStepSum              float64
-		currentStepErr              float64
-		currentStepActivationResult float64
+		sum              float64
+		err              float64
+		activationResult float64
 	}
 )
