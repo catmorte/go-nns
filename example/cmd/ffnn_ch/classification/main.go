@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/catmorte/go-nns/pkg/network/ffnn_ch"
 	"github.com/catmorte/go-nns/pkg/network/helpers/activation"
-	"github.com/catmorte/go-nns/pkg/network/helpers/processing"
 	"github.com/catmorte/go-nns/pkg/network/helpers/weightgen"
 	"math/rand"
 	"time"
@@ -22,11 +21,11 @@ func main() {
 	)
 
 	feed([]float64{1, 1})
-	fmt.Println(processing.SoftMax().Process(ffnn_ch.WaitForAnswer(ctx, outputSignals)))
+	fmt.Println(ffnn_ch.WaitForAnswer(ctx, outputSignals))
 	feed([]float64{1, 0})
-	fmt.Println(processing.SoftMax().Process(ffnn_ch.WaitForAnswer(ctx, outputSignals)))
+	fmt.Println(ffnn_ch.WaitForAnswer(ctx, outputSignals))
 	feed([]float64{0, 1})
-	fmt.Println(processing.SoftMax().Process(ffnn_ch.WaitForAnswer(ctx, outputSignals)))
+	fmt.Println(ffnn_ch.WaitForAnswer(ctx, outputSignals))
 	feed([]float64{0, 0})
-	fmt.Println(processing.SoftMax().Process(ffnn_ch.WaitForAnswer(ctx, outputSignals)))
+	fmt.Println(ffnn_ch.WaitForAnswer(ctx, outputSignals))
 }

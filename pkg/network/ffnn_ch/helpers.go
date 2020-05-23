@@ -5,9 +5,9 @@ import (
 	"sync"
 )
 
-func BuildInputs(ctx context.Context, size int) ([]<-chan float64, func([]float64)) {
+func BuildInputs(ctx context.Context, size int) ([]chan float64, func([]float64)) {
 	inputs := make([]chan float64, size)
-	inputsWithDirection := make([]<-chan float64, size)
+	inputsWithDirection := make([]chan float64, size)
 	for i := 0; i < size; i++ {
 		channel := make(chan float64)
 		inputs[i] = channel
@@ -24,14 +24,13 @@ func BuildInputs(ctx context.Context, size int) ([]<-chan float64, func([]float6
 				case <-ctx.Done():
 					return
 				}
-
 			}(i)
 		}
 		syncSignals.Wait()
 	}
 }
 
-func WaitForAnswer(ctx context.Context, outputSignals []<-chan float64) []float64 {
+func WaitForAnswer(ctx context.Context, outputSignals []chan float64) []float64 {
 	outputSize := len(outputSignals)
 	answer := make([]float64, outputSize)
 	syncSignals := &sync.WaitGroup{}
