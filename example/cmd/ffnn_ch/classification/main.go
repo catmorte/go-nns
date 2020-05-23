@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"github.com/catmorte/go-nns/pkg/network/ffnn_ch"
 	"github.com/catmorte/go-nns/pkg/network/helpers/activation"
@@ -12,9 +11,8 @@ import (
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
-	ctx := context.Background()
 	inputs, feed := ffnn_ch.BuildInputs(2)
-	outputSignals := ffnn_ch.AliveNetwork(ctx, inputs,
+	outputSignals := ffnn_ch.AliveNetwork(inputs,
 		ffnn_ch.LayerConstructor(2, activation.Sigmoid(), weightgen.RandomWithin(-0.5, 0.5)),
 		ffnn_ch.LayerConstructor(2, activation.Sigmoid(), weightgen.RandomWithin(-0.5, 0.5)),
 		ffnn_ch.LayerConstructor(4, activation.Sigmoid(), weightgen.RandomWithin(-0.5, 0.5)),

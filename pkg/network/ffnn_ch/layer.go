@@ -1,12 +1,19 @@
 package ffnn_ch
 
 import (
-	"context"
 	"github.com/catmorte/go-nns/pkg/network/helpers/activation"
 	"github.com/catmorte/go-nns/pkg/network/helpers/weightgen"
 )
 
-func aliveLayer(ctx context.Context,
+type LayerBuilder func(prevLayersAxonsConstructors []AxonsConstructor) (curLayerAxons []AxonsConstructor)
+
+func LayerConstructor(layerSize int, activation activation.Activation, weightGen weightgen.WeightGen) LayerBuilder {
+	return func(prevLayersAxonsConstructors []AxonsConstructor) []AxonsConstructor {
+		return aliveLayer(prevLayersAxonsConstructors, layerSize, activation, weightGen)
+	}
+}
+
+func aliveLayer(
 	prevLayersAxonsConstructors []AxonsConstructor,
 	curLayerSize int,
 	activation activation.Activation,
@@ -24,15 +31,7 @@ func aliveLayer(ctx context.Context,
 		for j := 0; j < prevLayerAxonsLength; j++ {
 			dendrites[j] = curLayerDendrites[j][i]
 		}
-		curLayerAxons[i] = aliveNeuron(ctx, dendrites, activation, weightGen)
+		curLayerAxons[i] = aliveNeuron(dendrites, activation, weightGen)
 	}
 	return
-}
-
-type LayerBuilder func(ctx context.Context, prevLayersAxonsConstructors []AxonsConstructor) (curLayerAxons []AxonsConstructor)
-
-func LayerConstructor(layerSize int, activation activation.Activation, weightGen weightgen.WeightGen) LayerBuilder {
-	return func(ctx context.Context, prevLayersAxonsConstructors []AxonsConstructor) []AxonsConstructor {
-		return aliveLayer(ctx, prevLayersAxonsConstructors, layerSize, activation, weightGen)
-	}
 }

@@ -1,14 +1,13 @@
 package ffnn_ch
 
 import (
-	"context"
 	"github.com/catmorte/go-nns/pkg/network/helpers/activation"
 	"github.com/catmorte/go-nns/pkg/network/helpers/weightgen"
 )
 
 type AxonsConstructor func(int) []chan float64
 
-func aliveNeuron(ctx context.Context,
+func aliveNeuron(
 	dendrites []chan float64,
 	activation activation.Activation,
 	weightGen weightgen.WeightGen) AxonsConstructor {
