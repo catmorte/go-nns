@@ -5,9 +5,12 @@ import (
 	"github.com/catmorte/go-nns/pkg/network/ffnn"
 	"github.com/catmorte/go-nns/pkg/network/helpers/activation"
 	"github.com/catmorte/go-nns/pkg/network/helpers/weightgen"
+	"math/rand"
+	"time"
 )
 
 func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
 	weightGen := weightgen.RandomWithin(-0.5, 0.5)
 	activationCalc := activation.Sigmoid()
 	net := ffnn.CreateNetwork(2)
@@ -28,7 +31,7 @@ func main() {
 	fmt.Println(getMaxIndexAndVal(net.Work([]float64{0, 0})))
 }
 
-func getMaxIndexAndVal(values []float64) (int, float64){
+func getMaxIndexAndVal(values []float64) (int, float64) {
 	index := 0
 	max := values[index]
 	for i, value := range values {

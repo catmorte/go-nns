@@ -6,9 +6,12 @@ import (
 	"github.com/catmorte/go-nns/pkg/network/helpers/activation"
 	"github.com/catmorte/go-nns/pkg/network/helpers/weightgen"
 	"math"
+	"math/rand"
+	"time"
 )
 
 func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
 	weightGen := weightgen.RandomWithin(-0.5, 0.5)
 	activationCalc := activation.Sigmoid()
 	net := ffnn.CreateNetwork(2)
@@ -26,5 +29,5 @@ func main() {
 	fmt.Println(math.Round(net.Work([]float64{1, 1})[0]))
 	fmt.Println(math.Round(net.Work([]float64{1, 0})[0]))
 	fmt.Println(math.Round(net.Work([]float64{0, 1})[0]))
-	fmt.Println(math.Round( net.Work([]float64{0, 0})[0]))
+	fmt.Println(math.Round(net.Work([]float64{0, 0})[0]))
 }
