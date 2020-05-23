@@ -1,11 +1,10 @@
 package ffnn_ch
 
 import (
-	"context"
 	"sync"
 )
 
-func BuildInputs(ctx context.Context, size int) ([]chan float64, func([]float64)) {
+func BuildInputs(size int) ([]chan float64, func([]float64)) {
 	inputs := make([]chan float64, size)
 	inputsWithDirection := make([]chan float64, size)
 	for i := 0; i < size; i++ {
@@ -19,18 +18,14 @@ func BuildInputs(ctx context.Context, size int) ([]chan float64, func([]float64)
 		for i := 0; i < size; i++ {
 			go func(index int) {
 				defer syncSignals.Done()
-				select {
-				case inputs[index] <- food[index]:
-				case <-ctx.Done():
-					return
-				}
+				inputs[index] <- food[index]
 			}(i)
 		}
 		syncSignals.Wait()
 	}
 }
 
-func WaitForAnswer(ctx context.Context, outputSignals []chan float64) []float64 {
+func WaitForAnswer(outputSignals []chan float64) []float64 {
 	outputSize := len(outputSignals)
 	answer := make([]float64, outputSize)
 	syncSignals := &sync.WaitGroup{}
@@ -38,12 +33,25 @@ func WaitForAnswer(ctx context.Context, outputSignals []chan float64) []float64 
 	for i, outputSignal := range outputSignals {
 		go func(signal <-chan float64, signalIndex int) {
 			defer syncSignals.Done()
-			select {
-			case <-ctx.Done():
-			case answer[signalIndex] = <-signal:
-			}
+			answer[signalIndex] = <-signal
 		}(outputSignal, i)
 	}
 	syncSignals.Wait()
 	return answer
+}
+
+func BroadcastTo(broadcastAxon <-chan float64, axonsAmount int) (axons []chan float64) {
+	axons = make([]chan float64, axonsAmount)
+	for i := 0; i < axonsAmount; i++ {
+		axons[i] = make(chan float64)
+	}
+	go func() {
+		for {
+			val := <-broadcastAxon
+			for i := 0; i < axonsAmount; i++ {
+				axons[i] <- val
+			}
+		}
+	}()
+	return
 }
