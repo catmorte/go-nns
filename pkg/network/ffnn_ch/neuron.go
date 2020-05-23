@@ -53,13 +53,8 @@ func aliveNeuron(ctx context.Context,
 	}()
 
 	return func(outputSize int) []chan float64 {
-		axons = make([]chan float64, outputSize)
 		broadcastAxon = make(chan float64, outputSize)
-
-		for i := 0; i < outputSize; i++ {
-			axons[i] = make(chan float64)
-		}
-		broadcastTo(ctx, broadcastAxon, axons)
+		axons = broadcastTo(ctx, broadcastAxon, outputSize)
 		close(initialized)
 		return axons
 	}
@@ -102,15 +97,8 @@ func AliveNetwork(ctx context.Context, inputs []chan float64, layerMakers ...Lay
 
 	for i := 0; i < inputsLength; i++ {
 		inputToAxonsConstructors[i] = func(broadcastAxon chan float64) AxonsConstructor {
-			return func(outputSize int) (axons []chan float64) {
-				axons = make([]chan float64, outputSize)
-
-				for i := 0; i < outputSize; i++ {
-					axons[i] = make(chan float64)
-				}
-
-				broadcastTo(ctx, broadcastAxon, axons)
-				return axons
+			return func(outputSize int) []chan float64 {
+				return broadcastTo(ctx, broadcastAxon, outputSize)
 			}
 		}(inputs[i])
 	}
@@ -126,8 +114,11 @@ func AliveNetwork(ctx context.Context, inputs []chan float64, layerMakers ...Lay
 	return
 }
 
-func broadcastTo(ctx context.Context, broadcastAxon <-chan float64, axons []chan float64) {
-	axonsAmount := len(axons)
+func broadcastTo(ctx context.Context, broadcastAxon <-chan float64, axonsAmount int) (axons []chan float64) {
+	axons = make([]chan float64, axonsAmount)
+	for i := 0; i < axonsAmount; i++ {
+		axons[i] = make(chan float64)
+	}
 	go func() {
 		for {
 			select {
@@ -140,4 +131,5 @@ func broadcastTo(ctx context.Context, broadcastAxon <-chan float64, axons []chan
 			}
 		}
 	}()
+	return
 }
